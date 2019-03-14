@@ -1,0 +1,41 @@
+{
+  "name": "@absolunet/bitbucket-api",
+  "version": "1.0.0",
+  "description": "Bitbucket API via OAuth2",
+  "definition": "",
+  "homepage": "https://github.com/absolunet/node-bitbucket-api",
+  "author": {
+    "name": "Absolunet",
+    "url": "https://absolunet.com"
+  },
+  "keywords": [
+    "api",
+    "bitbucket",
+    "oauth",
+    "oauth2"
+  ],
+  "license": "MIT",
+  "repository": {
+    "url": "git://github.com/absolunet/node-bitbucket-api.git",
+    "type": "git"
+  },
+  "bugs": {
+    "url": "https://github.com/absolunet/node-bitbucket-api/issues"
+  },
+  "engines": {
+    "node": ">= 11.11.0"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "ava test"
+  },
+  "devDependencies": {
+    "@absolunet/tester": "2.5.0"
+  },
+  "dependencies": {
+    "@absolunet/private-registry": "^1.1.0",
+    "got": "^9.6.0",
+    "ow": "^0.12.0",
+    "simple-oauth2": "^2.2.1"
+  }
+}
