@@ -17,7 +17,7 @@ const call = async (url, options = {}) => {
 	};
 
 	if (options.token) {
-		params.headers = { Authorization:`Bearer ${options.token}` };
+		params.headers = { Authorization: `Bearer ${options.token}` };
 	}
 
 	if (options.method) {
@@ -74,7 +74,7 @@ class BitbucketAPI {
 
 		try {
 			const oauth2 = simpleOAuth2.create({
-				client: { id:consumerKey, secret:consumerSecret },
+				client: { id: consumerKey, secret: consumerSecret },
 				auth: {
 					tokenHost: 'https://bitbucket.org/site/oauth2',
 					tokenPath: '/access_token'

@@ -23,19 +23,24 @@
     "url": "https://github.com/absolunet/node-bitbucket-api/issues"
   },
   "engines": {
-    "node": ">= 11.11.0"
+    "node": ">= 12.4.0"
   },
   "main": "index.js",
   "scripts": {
-    "test": "ava test"
+    "test": "ava test",
+    "installer": "node manager.js --task=installer",
+    "outdated": "node manager.js --task=outdated",
+    "build": "node manager.js --task=build",
+    "deploy": "node manager.js --task=deploy"
   },
   "devDependencies": {
-    "@absolunet/tester": "2.5.0"
+    "@absolunet/manager": "1.1.0",
+    "@absolunet/tester": "2.6.8"
   },
   "dependencies": {
-    "@absolunet/private-registry": "^1.1.0",
+    "@absolunet/private-registry": "^2.0.0",
     "got": "^9.6.0",
-    "ow": "^0.12.0",
+    "ow": "^0.13.2",
     "simple-oauth2": "^2.2.1"
   }
 }
