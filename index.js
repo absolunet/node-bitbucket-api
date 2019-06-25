@@ -3,7 +3,7 @@
 //--------------------------------------------------------
 'use strict';
 
-const got          = require('got');
+const axios        = require('axios');
 const ow           = require('ow');
 const simpleOAuth2 = require('simple-oauth2');
 const __           = require('@absolunet/private-registry');
@@ -11,9 +11,10 @@ const __           = require('@absolunet/private-registry');
 
 const call = async (url, options = {}) => {
 	const params = {
-		baseUrl:         'https://api.bitbucket.org/2.0',
-		json:            true,
-		throwHttpErrors: false
+		baseURL:        'https://api.bitbucket.org/2.0',
+		url:            url,
+		responseType:   'json',
+		validateStatus: () => { return true; }
 	};
 
 	if (options.token) {
@@ -25,14 +26,14 @@ const call = async (url, options = {}) => {
 	}
 
 	if (options.data) {
-		params.body = options.data;
+		params.data = options.data;
 	}
 
-	const response = await got(url, params);
+	const { status, data } = await axios(params);
 
 	return {
-		success: response.statusCode === 200,
-		data:    response.body
+		success: status === 200,
+		data:    data
 	};
 };
 

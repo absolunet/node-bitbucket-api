@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@absolunet/private-registry": "^2.0.0",
-    "got": "^9.6.0",
+    "axios": "^0.19.0",
     "ow": "^0.13.2",
     "simple-oauth2": "^2.2.1"
   }
