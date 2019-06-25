@@ -1,6 +1,8 @@
-//--------------------------------------------------------
-//-- Bitbucket API
-//--------------------------------------------------------
+/**
+ * Bitbucket API
+ * @module bitbucket-api
+ */
+
 'use strict';
 
 const axios        = require('axios');
@@ -58,17 +60,27 @@ const replaceParams = (url, user) => {
 
 
 
-
+/** Main entry point */
 class BitbucketAPI {
 
-	//-- Full user object
+	/**
+	 * Full user object
+	 * @readonly
+	 * @property {object} user
+	 */
 	get user() {
 		return __(this).get('user');
 	}
 
 
 
-	//-- Authenticate via OAuth2
+	/**
+	 * Authenticate via OAuth2
+	 * @async
+	 * @param {string} consumerKey - The OAuth2 consumer key
+	 * @param {string} consumerSecret - The OAuth2 consumer secret
+	 * @returns {object} { success: boolean (If authentication worked), message: string (Error message) }
+	 */
 	async authenticate(consumerKey, consumerSecret) {
 		ow(consumerKey,    ow.string.nonEmpty.alphanumeric.length(18));
 		ow(consumerSecret, ow.string.nonEmpty.alphanumeric.length(32));
@@ -114,6 +126,13 @@ class BitbucketAPI {
 
 
 	//-- Raw API methods
+	/**
+	 * PUT method
+	 * @async
+	 * @param {string} url - Url to call
+	 * @param {object} data - Data to send
+	 * @returns {object} { success: boolean (If call worked), data: object (Data returned by call) }
+	 */
 	put(url, data) {
 		ow(url,  ow.string.nonEmpty);
 		ow(data, ow.optional.object);
@@ -126,6 +145,13 @@ class BitbucketAPI {
 	}
 
 
+	/**
+	 * POST method
+	 * @async
+	 * @param {string} url - Url to call
+	 * @param {object} data - Data to send
+	 * @returns {object} { success: boolean (If call worked), data: object (Data returned by call) }
+	 */
 	post(url, data) {
 		ow(url,  ow.string.nonEmpty);
 		ow(data, ow.optional.object);
@@ -138,6 +164,13 @@ class BitbucketAPI {
 	}
 
 
+	/**
+	 * GET method
+	 * @async
+	 * @param {string} url - Url to call
+	 * @param {object} data - Data to send
+	 * @returns {object} { success: boolean (If call worked), data: object (Data returned by call) }
+	 */
 	get(url, data) {
 		ow(url,  ow.string.nonEmpty);
 		ow(data, ow.optional.object);
@@ -150,6 +183,13 @@ class BitbucketAPI {
 	}
 
 
+	/**
+	 * DELETE method
+	 * @async
+	 * @param {string} url - Url to call
+	 * @param {object} data - Data to send
+	 * @returns {object} { success: boolean (If call worked), data: object (Data returned by call) }
+	 */
 	delete(url, data) {
 		ow(url,  ow.string.nonEmpty);
 		ow(data, ow.optional.object);
