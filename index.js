@@ -5,7 +5,13 @@
 
 'use strict';
 
-const axios        = require('axios');
+const params = {
+	baseURL: 'https://api.bitbucket.org/2.0',
+	responseType: 'json',
+	validateStatus: () => { return true; }
+};
+
+const axios        = require('axios').create(params);
 const ow           = require('ow');
 const simpleOAuth2 = require('simple-oauth2');
 const __           = require('@absolunet/private-registry');
@@ -13,10 +19,7 @@ const __           = require('@absolunet/private-registry');
 
 const call = async (url, options = {}) => {
 	const params = {
-		baseURL:        'https://api.bitbucket.org/2.0',
-		url:            url,
-		responseType:   'json',
-		validateStatus: () => { return true; }
+		url: url
 	};
 
 	if (options.token) {
@@ -62,6 +65,14 @@ const replaceParams = (url, user) => {
 
 /** Main entry point */
 class BitbucketAPI {
+
+	/**
+	 * The axios instance
+	 * @readonly
+	 */
+	get axios() {
+		return axios;
+	}
 
 	/**
 	 * Full user object
