@@ -64,6 +64,14 @@ const replaceParams = (url, user) => {
 class BitbucketAPI {
 
 	/**
+	 * The axios module
+	 * @readonly
+	 */
+	get axios() {
+		return axios;
+	}
+
+	/**
 	 * Full user object
 	 * @readonly
 	 * @property {object} user
