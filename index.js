@@ -5,13 +5,13 @@
 
 'use strict';
 
-const params = {
-	baseURL: 'https://api.bitbucket.org/2.0',
-	responseType: 'json',
+const baseParams = {
+	baseURL:        'https://api.bitbucket.org/2.0',
+	responseType:   'json',
 	validateStatus: () => { return true; }
 };
 
-const axios        = require('axios').create(params);
+const axios        = require('axios').create(baseParams);
 const ow           = require('ow');
 const simpleOAuth2 = require('simple-oauth2');
 const __           = require('@absolunet/private-registry');
