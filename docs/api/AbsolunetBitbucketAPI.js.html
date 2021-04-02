@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>AbsolunetBitbucketAPI.js - @absolunet/bitbucket-api API documentation</title>
+
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta http-equiv="cleartype" content="on">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="shortcut icon"    href="../assets__/icons/favicon.ico">
+	<link rel="apple-touch-icon" href="../assets__/icons/touch-57.png">
+	<link rel="apple-touch-icon" href="../assets__/icons/touch-72.png"  sizes="72x72">
+	<link rel="apple-touch-icon" href="../assets__/icons/touch-76.png"  sizes="76x76">
+	<link rel="apple-touch-icon" href="../assets__/icons/touch-114.png" sizes="114x114">
+	<link rel="apple-touch-icon" href="../assets__/icons/touch-120.png" sizes="120x120">
+	<link rel="apple-touch-icon" href="../assets__/icons/touch-144.png" sizes="144x144">
+	<link rel="apple-touch-icon" href="../assets__/icons/touch-152.png" sizes="152x152">
+	<link rel="apple-touch-icon" href="../assets__/icons/touch-167.png" sizes="167x167">
+	<link rel="apple-touch-icon" href="../assets__/icons/touch-180.png" sizes="180x180">
+	<link rel="image_src"        href="../assets__/icons/touch-512.png">
+	<link rel="icon"             href="../assets__/icons/icon-64.png"  sizes="64x64">
+	<link rel="icon"             href="../assets__/icons/icon-96.png"  sizes="96x96">
+	<link rel="icon"             href="../assets__/icons/icon-192.png" sizes="192x192">
+	<link rel="icon"             href="../assets__/icons/icon-195.png" sizes="195x195">
+	<link rel="icon"             href="../assets__/icons/icon-196.png" sizes="196x196">
+	<link rel="icon"             href="../assets__/icons/icon-228.png" sizes="228x228">
+
+	<meta name="application-name"                content="@absolunet/bitbucket-api">
+	<meta name="msapplication-TileColor"         content="#2b2d3c">
+	<meta name="msapplication-square70x70logo"   content="../assets__/icons/tile-small.png">
+	<meta name="msapplication-square150x150logo" content="../assets__/icons/tile-medium.png">
+	<meta name="msapplication-wide310x150logo"   content="../assets__/icons/tile-wide.png">
+	<meta name="msapplication-square310x310logo" content="../assets__/icons/tile-large.png">
+
+	<link href="../assets__/main.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Fira+Mono:400,500,700|Lato:100,100i,300,300i,400,400i,700,700i,900,900i|Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+
+	
+	<!-- @absolunet/manager@2.1.0 (c) 2011-2021 Absolunet -->
+</head>
+<body>
+	
+
+	<header>
+		<p class="package"><a href="../">@absolunet/bitbucket-api</a><span class="version">1.2.0</span></p>
+		<a href="https://github.com/absolunet/node-bitbucket-api" class="github" data-external="external">View on GitHub</a>
+	</header>
+
+	<div class="container">
+		<nav><div>
+			<h2><a href="index.html">API Home</a></h2><h3>Modules</h3><ul><li><a href="module-@absolunet_bitbucket-api.html">@absolunet/bitbucket-api</a><ul class='members'><li data-type='member'><a href="module-@absolunet_bitbucket-api.html#~BitbucketAPI">BitbucketAPI</a></li></ul></li></ul><h3>Classes</h3><ul><li><a href="AbsolunetBitbucketAPI.html">AbsolunetBitbucketAPI</a><ul class='members'><li data-type='member'><a href="AbsolunetBitbucketAPI.html#axios">axios</a></li><li data-type='member'><a href="AbsolunetBitbucketAPI.html#user">user</a></li></ul><ul class='methods'><li data-type='method'><a href="AbsolunetBitbucketAPI.html#authenticate">authenticate</a></li><li data-type='method'><a href="AbsolunetBitbucketAPI.html#put">put</a></li><li data-type='method'><a href="AbsolunetBitbucketAPI.html#post">post</a></li><li data-type='method'><a href="AbsolunetBitbucketAPI.html#get">get</a></li><li data-type='method'><a href="AbsolunetBitbucketAPI.html#delete">delete</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#AuthenticationResponse">AuthenticationResponse</a></li><li><a href="global.html#CallResponse">CallResponse</a></li></ul>
+		</div></nav>
+
+		<div id="main">
+		
+			<h1 class="page-title">AbsolunetBitbucketAPI.js</h1>
+		
+
+			
+
+
+
+    
+    <section>
+        <article>
+            <pre id="line" class="line-numbers"><code class="language-js">//--------------------------------------------------------
+//-- AbsolunetBitbucketAPI
+//--------------------------------------------------------
+import axios        from 'axios';
+import ow           from 'ow';
+import simpleOAuth2 from 'simple-oauth2';
+import __           from '@absolunet/private-registry';
+
+
+
+// Base parameters
+const baseParameters = {
+	baseURL:        'https://api.bitbucket.org/2.0',
+	responseType:   'json',
+	validateStatus: () => { return true; }
+};
+
+
+// Axios instance
+const axiosBitbucket = axios.create(baseParameters);
+
+
+// Call wrapper
+const call = async (url, options = {}) => {
+	const parameters = {
+		url,
+		method:  options.method,
+		data:    options.data,
+		headers: options.token ? { Authorization: `Bearer ${options.token}` } : undefined
+	};
+
+	const response = await axiosBitbucket(parameters);
+
+	return {
+		...response,
+		success: response.status === 200
+	};
+};
+
+
+// URL parameters replacement
+const replaceParameters = (url, user) => {
+	let finalUrl = url;
+
+	if (user) {
+		const replacements = {
+			'{uuid}': user.uuid
+		};
+
+		Object.keys(replacements).forEach((id) => {
+			finalUrl = finalUrl.replaceAll(id, replacements[id]);
+		});
+	}
+
+	return finalUrl;
+};
+
+
+
+
+
+/**
+ * Bitbucket API.
+ */
+class AbsolunetBitbucketAPI {
+
+	/**
+	 * The {@link https://axios-http.com/docs/instance/ axios instance}.
+	 *
+	 * @type {object}
+	 */
+	get axios() {
+		return axiosBitbucket;
+	}
+
+
+	/**
+	 * Current {@link https://developer.atlassian.com/bitbucket/api/2/reference/resource/user Bitbucket user}.
+	 *
+	 * @type {object}
+	 */
+	get user() {
+		return __(this).get('user');
+	}
+
+
+	/**
+	 * Authenticate via OAuth2.
+	 *
+	 * @async
+	 * @param {string} consumerKey - The OAuth2 consumer key.
+	 * @param {string} consumerSecret - The OAuth2 consumer secret.
+	 * @returns {AuthenticationResponse} Response.
+	 */
+	async authenticate(consumerKey, consumerSecret) {
+		ow(consumerKey,    ow.string.nonEmpty.alphanumeric.length(18));
+		ow(consumerSecret, ow.string.nonEmpty.alphanumeric.length(32));
+
+		try {
+			const oauth2 = simpleOAuth2.create({
+				client: { id: consumerKey, secret: consumerSecret },
+				auth: {
+					tokenHost: 'https://bitbucket.org/site/oauth2',
+					tokenPath: '/access_token'
+				}
+			});
+
+			// Fetch access token
+			const result      = await oauth2.clientCredentials.getToken();
+			const accessToken = oauth2.accessToken.create(result);
+			if (accessToken.token.access_token) {
+				__(this).set('token', accessToken.token.access_token);
+			}  else {
+				throw new Error(`Access token can't be fetched`);
+			}
+
+			// Fetch user data
+			const { success, data } = await this.get(`/user`);
+			if (success) {
+				__(this).set('user', data);
+			} else {
+				throw new Error(data.error ? data.error.message : `User info can't be fetched`);
+			}
+
+			return {
+				success: true
+			};
+
+		} catch (error) {
+			return {
+				success: false,
+				message: error.message
+			};
+		}
+	}
+
+
+
+	//-- Raw API methods
+	/**
+	 * PUT method.
+	 *
+	 * @async
+	 * @param {string} url - Url to call.
+	 * @param {object} data - Data to send.
+	 * @returns {CallResponse} Response.
+	 */
+	put(url, data) {
+		ow(url,  ow.string.nonEmpty);
+		ow(data, ow.optional.object);
+
+		return call(replaceParameters(url, __(this).get('user')), {
+			token:  __(this).get('token'),
+			method: 'PUT',
+			data
+		});
+	}
+
+
+	/**
+	 * POST method.
+	 *
+	 * @async
+	 * @param {string} url - Url to call.
+	 * @param {object} data - Data to send.
+	 * @returns {CallResponse} Response.
+	 */
+	post(url, data) {
+		ow(url,  ow.string.nonEmpty);
+		ow(data, ow.optional.object);
+
+		return call(replaceParameters(url, __(this).get('user')), {
+			token:  __(this).get('token'),
+			method: 'POST',
+			data
+		});
+	}
+
+
+	/**
+	 * GET method.
+	 *
+	 * @async
+	 * @param {string} url - Url to call.
+	 * @param {object} data - Data to send.
+	 * @returns {CallResponse} Response.
+	 */
+	get(url, data) {
+		ow(url,  ow.string.nonEmpty);
+		ow(data, ow.optional.object);
+
+		return call(replaceParameters(url, __(this).get('user')), {
+			token:  __(this).get('token'),
+			method: 'GET',
+			data
+		});
+	}
+
+
+	/**
+	 * DELETE method.
+	 *
+	 * @async
+	 * @param {string} url - Url to call.
+	 * @param {object} data - Data to send.
+	 * @returns {CallResponse} Response.
+	 */
+	delete(url, data) {
+		ow(url,  ow.string.nonEmpty);
+		ow(data, ow.optional.object);
+
+		return call(replaceParameters(url, __(this).get('user')), {
+			token:  __(this).get('token'),
+			method: 'DELETE',
+			data
+		});
+	}
+
+}
+
+
+export default AbsolunetBitbucketAPI;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+		</div>
+	</div>
+
+	<footer>
+		MIT © 2011-2021 <span class="made">Made with <span class="adjective" data-component="adjective">&#x2764;</span> by <a href="https://absolunet.com" data-external="external">Absolunet</a></span>
+	</footer>
+
+	<script src="../assets__/main.js"></script>
+
+</body>
+</html>

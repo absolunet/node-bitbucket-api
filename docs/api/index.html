@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>@absolunet/bitbucket-api API documentation</title>
+
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta http-equiv="cleartype" content="on">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="shortcut icon"    href="../assets__/icons/favicon.ico">
+	<link rel="apple-touch-icon" href="../assets__/icons/touch-57.png">
+	<link rel="apple-touch-icon" href="../assets__/icons/touch-72.png"  sizes="72x72">
+	<link rel="apple-touch-icon" href="../assets__/icons/touch-76.png"  sizes="76x76">
+	<link rel="apple-touch-icon" href="../assets__/icons/touch-114.png" sizes="114x114">
+	<link rel="apple-touch-icon" href="../assets__/icons/touch-120.png" sizes="120x120">
+	<link rel="apple-touch-icon" href="../assets__/icons/touch-144.png" sizes="144x144">
+	<link rel="apple-touch-icon" href="../assets__/icons/touch-152.png" sizes="152x152">
+	<link rel="apple-touch-icon" href="../assets__/icons/touch-167.png" sizes="167x167">
+	<link rel="apple-touch-icon" href="../assets__/icons/touch-180.png" sizes="180x180">
+	<link rel="image_src"        href="../assets__/icons/touch-512.png">
+	<link rel="icon"             href="../assets__/icons/icon-64.png"  sizes="64x64">
+	<link rel="icon"             href="../assets__/icons/icon-96.png"  sizes="96x96">
+	<link rel="icon"             href="../assets__/icons/icon-192.png" sizes="192x192">
+	<link rel="icon"             href="../assets__/icons/icon-195.png" sizes="195x195">
+	<link rel="icon"             href="../assets__/icons/icon-196.png" sizes="196x196">
+	<link rel="icon"             href="../assets__/icons/icon-228.png" sizes="228x228">
+
+	<meta name="application-name"                content="@absolunet/bitbucket-api">
+	<meta name="msapplication-TileColor"         content="#2b2d3c">
+	<meta name="msapplication-square70x70logo"   content="../assets__/icons/tile-small.png">
+	<meta name="msapplication-square150x150logo" content="../assets__/icons/tile-medium.png">
+	<meta name="msapplication-wide310x150logo"   content="../assets__/icons/tile-wide.png">
+	<meta name="msapplication-square310x310logo" content="../assets__/icons/tile-large.png">
+
+	<link href="../assets__/main.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Fira+Mono:400,500,700|Lato:100,100i,300,300i,400,400i,700,700i,900,900i|Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+
+	
+	<!-- @absolunet/manager@2.1.0 (c) 2011-2021 Absolunet -->
+</head>
+<body>
+	
+
+	<header>
+		<p class="package"><a href="../">@absolunet/bitbucket-api</a><span class="version">1.2.0</span></p>
+		<a href="https://github.com/absolunet/node-bitbucket-api" class="github" data-external="external">View on GitHub</a>
+	</header>
+
+	<div class="container">
+		<nav><div>
+			<h2><a href="index.html">API Home</a></h2><h3>Modules</h3><ul><li><a href="module-@absolunet_bitbucket-api.html">@absolunet/bitbucket-api</a><ul class='members'><li data-type='member'><a href="module-@absolunet_bitbucket-api.html#~BitbucketAPI">BitbucketAPI</a></li></ul></li></ul><h3>Classes</h3><ul><li><a href="AbsolunetBitbucketAPI.html">AbsolunetBitbucketAPI</a><ul class='members'><li data-type='member'><a href="AbsolunetBitbucketAPI.html#axios">axios</a></li><li data-type='member'><a href="AbsolunetBitbucketAPI.html#user">user</a></li></ul><ul class='methods'><li data-type='method'><a href="AbsolunetBitbucketAPI.html#authenticate">authenticate</a></li><li data-type='method'><a href="AbsolunetBitbucketAPI.html#put">put</a></li><li data-type='method'><a href="AbsolunetBitbucketAPI.html#post">post</a></li><li data-type='method'><a href="AbsolunetBitbucketAPI.html#get">get</a></li><li data-type='method'><a href="AbsolunetBitbucketAPI.html#delete">delete</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#AuthenticationResponse">AuthenticationResponse</a></li><li><a href="global.html#CallResponse">CallResponse</a></li></ul>
+		</div></nav>
+
+		<div id="main">
+		
+
+			
+
+
+
+    
+
+
+    <section class="package">
+        <h3> </h3>		
+    </section>
+
+
+
+
+
+
+
+
+
+    
+
+
+
+    <section class="readme">
+        <article><h1>@absolunet/bitbucket-api</h1>
+<p><a href="https://www.npmjs.com/package/@absolunet/bitbucket-api"><img src="https://img.shields.io/npm/v/@absolunet/bitbucket-api?style=flat-square" alt="npm"></a>
+<a href="https://david-dm.org/absolunet/node-bitbucket-api"><img src="https://img.shields.io/david/absolunet/node-bitbucket-api?style=flat-square" alt="npm dependencies"></a>
+<a href="https://github.com/absolunet/node-bitbucket-api/actions?query=workflow%3Atests+branch%3Amaster"><img src="https://img.shields.io/github/workflow/status/absolunet/node-bitbucket-api/tests/master?label=tests&amp;style=flat-square" alt="Tests"></a>
+<a href="https://npms.io/search?q=%40absolunet%2Fbitbucket-api"><img src="https://badges.npms.io/%40absolunet%2Fbitbucket-api.svg?style=flat-square" alt="npms"></a>
+<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="License: MIT"></a></p>
+<blockquote>
+<p><a href="https://developer.atlassian.com/bitbucket/api/2/reference/">Bitbucket API</a> wrapper via OAuth2</p>
+</blockquote>
+<p>Authenticate to Bitbutcket APIv2 via OAuth2 then call API directly</p>
+<h2>Install</h2>
+<pre class="prettyprint source lang-sh"><code>$ npm install @absolunet/bitbucket-api
+</code></pre>
+<h2>Usage</h2>
+<pre class="prettyprint source lang-js"><code>import { BitbucketAPI } from '@absolunet/bitbucket-api';
+
+const CONSUMER_KEY    = 'zyxwvutsrqponmlkji';
+const CONSUMER_SECRET = 'abcdefghijklmnopqrstuvwxyz012345';
+
+const bitbucket      = new BitbucketAPI();
+const authentication = await bitbucket.authenticate(CONSUMER_KEY, CONSUMER_SECRET);
+
+if (authentication.success) {
+	const { success, data } = bitbucket.get('/repositories/{uuid}/my-project');
+
+	if (success) {
+		console.log(data);
+	}
+}
+</code></pre>
+<h2>Documentation</h2>
+<p>See the <a href="https://documentation.absolunet.com/node-bitbucket-api">full documentation</a> for an in-depth look.</p>
+<p>See the <a href="CHANGELOG.md">Changelog</a> to see what has changed.</p>
+<h2>Contribute</h2>
+<p>See the <a href="CONTRIBUTING.md">Contributing Guidelines</a> for ways to get started.</p>
+<p>See the <a href="SUPPORT.md">Support Guide</a> for ways to get help.</p>
+<p>See the <a href="SECURITY.md">Security Policy</a> for sharing vulnerability reports.</p>
+<p>This project has a <a href="CODE_OF_CONDUCT.md">Code of Conduct</a>.
+By interacting with this repository, organization, or community you agree to abide by its terms.</p>
+<h2>License</h2>
+<p><a href="LICENSE">MIT</a> © <a href="https://absolunet.com">Absolunet</a></p></article>
+    </section>
+
+
+
+
+
+
+		</div>
+	</div>
+
+	<footer>
+		MIT © 2011-2021 <span class="made">Made with <span class="adjective" data-component="adjective">&#x2764;</span> by <a href="https://absolunet.com" data-external="external">Absolunet</a></span>
+	</footer>
+
+	<script src="../assets__/main.js"></script>
+
+</body>
+</html>

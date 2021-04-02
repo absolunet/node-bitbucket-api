@@ -1,49 +1,45 @@
-/**
- * Bitbucket API
- * @module bitbucket-api
- */
+//--------------------------------------------------------
+//-- AbsolunetBitbucketAPI
+//--------------------------------------------------------
+import axios        from 'axios';
+import ow           from 'ow';
+import simpleOAuth2 from 'simple-oauth2';
+import __           from '@absolunet/private-registry';
 
-'use strict';
 
-const baseParams = {
+
+// Base parameters
+const baseParameters = {
 	baseURL:        'https://api.bitbucket.org/2.0',
 	responseType:   'json',
 	validateStatus: () => { return true; }
 };
 
-const axios        = require('axios').create(baseParams);
-const ow           = require('ow');
-const simpleOAuth2 = require('simple-oauth2');
-const __           = require('@absolunet/private-registry');
+
+// Axios instance
+const axiosBitbucket = axios.create(baseParameters);
 
 
+// Call wrapper
 const call = async (url, options = {}) => {
-	const params = {
-		url: url
+	const parameters = {
+		url,
+		method:  options.method,
+		data:    options.data,
+		headers: options.token ? { Authorization: `Bearer ${options.token}` } : undefined
 	};
 
-	if (options.token) {
-		params.headers = { Authorization: `Bearer ${options.token}` };
-	}
-
-	if (options.method) {
-		params.method = options.method;
-	}
-
-	if (options.data) {
-		params.data = options.data;
-	}
-
-	const { status, data } = await axios(params);
+	const response = await axiosBitbucket(parameters);
 
 	return {
-		success: status === 200,
-		data:    data
+		...response,
+		success: response.status === 200
 	};
 };
 
 
-const replaceParams = (url, user) => {
+// URL parameters replacement
+const replaceParameters = (url, user) => {
 	let finalUrl = url;
 
 	if (user) {
@@ -52,7 +48,7 @@ const replaceParams = (url, user) => {
 		};
 
 		Object.keys(replacements).forEach((id) => {
-			finalUrl = finalUrl.replace(id, replacements[id]);
+			finalUrl = finalUrl.replaceAll(id, replacements[id]);
 		});
 	}
 
@@ -63,34 +59,38 @@ const replaceParams = (url, user) => {
 
 
 
-/** Main entry point */
-class BitbucketAPI {
+/**
+ * Bitbucket API.
+ */
+class AbsolunetBitbucketAPI {
 
 	/**
-	 * The axios instance
-	 * @readonly
+	 * The {@link https://axios-http.com/docs/instance/ axios instance}.
+	 *
+	 * @type {object}
 	 */
 	get axios() {
-		return axios;
+		return axiosBitbucket;
 	}
 
+
 	/**
-	 * Full user object
-	 * @readonly
-	 * @property {object} user
+	 * Current {@link https://developer.atlassian.com/bitbucket/api/2/reference/resource/user Bitbucket user}.
+	 *
+	 * @type {object}
 	 */
 	get user() {
 		return __(this).get('user');
 	}
 
 
-
 	/**
-	 * Authenticate via OAuth2
+	 * Authenticate via OAuth2.
+	 *
 	 * @async
-	 * @param {string} consumerKey - The OAuth2 consumer key
-	 * @param {string} consumerSecret - The OAuth2 consumer secret
-	 * @returns {object} { success: boolean (If authentication worked), message: string (Error message) }
+	 * @param {string} consumerKey - The OAuth2 consumer key.
+	 * @param {string} consumerSecret - The OAuth2 consumer secret.
+	 * @returns {AuthenticationResponse} Response.
 	 */
 	async authenticate(consumerKey, consumerSecret) {
 		ow(consumerKey,    ow.string.nonEmpty.alphanumeric.length(18));
@@ -138,81 +138,85 @@ class BitbucketAPI {
 
 	//-- Raw API methods
 	/**
-	 * PUT method
+	 * PUT method.
+	 *
 	 * @async
-	 * @param {string} url - Url to call
-	 * @param {object} data - Data to send
-	 * @returns {object} { success: boolean (If call worked), data: object (Data returned by call) }
+	 * @param {string} url - Url to call.
+	 * @param {object} data - Data to send.
+	 * @returns {CallResponse} Response.
 	 */
 	put(url, data) {
 		ow(url,  ow.string.nonEmpty);
 		ow(data, ow.optional.object);
 
-		return call(replaceParams(url, __(this).get('user')), {
+		return call(replaceParameters(url, __(this).get('user')), {
 			token:  __(this).get('token'),
 			method: 'PUT',
-			data:   data
+			data
 		});
 	}
 
 
 	/**
-	 * POST method
+	 * POST method.
+	 *
 	 * @async
-	 * @param {string} url - Url to call
-	 * @param {object} data - Data to send
-	 * @returns {object} { success: boolean (If call worked), data: object (Data returned by call) }
+	 * @param {string} url - Url to call.
+	 * @param {object} data - Data to send.
+	 * @returns {CallResponse} Response.
 	 */
 	post(url, data) {
 		ow(url,  ow.string.nonEmpty);
 		ow(data, ow.optional.object);
 
-		return call(replaceParams(url, __(this).get('user')), {
+		return call(replaceParameters(url, __(this).get('user')), {
 			token:  __(this).get('token'),
 			method: 'POST',
-			data:   data
+			data
 		});
 	}
 
 
 	/**
-	 * GET method
+	 * GET method.
+	 *
 	 * @async
-	 * @param {string} url - Url to call
-	 * @param {object} data - Data to send
-	 * @returns {object} { success: boolean (If call worked), data: object (Data returned by call) }
+	 * @param {string} url - Url to call.
+	 * @param {object} data - Data to send.
+	 * @returns {CallResponse} Response.
 	 */
 	get(url, data) {
 		ow(url,  ow.string.nonEmpty);
 		ow(data, ow.optional.object);
 
-		return call(replaceParams(url, __(this).get('user')), {
+		return call(replaceParameters(url, __(this).get('user')), {
 			token:  __(this).get('token'),
 			method: 'GET',
-			data:   data
+			data
 		});
 	}
 
 
 	/**
-	 * DELETE method
+	 * DELETE method.
+	 *
 	 * @async
-	 * @param {string} url - Url to call
-	 * @param {object} data - Data to send
-	 * @returns {object} { success: boolean (If call worked), data: object (Data returned by call) }
+	 * @param {string} url - Url to call.
+	 * @param {object} data - Data to send.
+	 * @returns {CallResponse} Response.
 	 */
 	delete(url, data) {
 		ow(url,  ow.string.nonEmpty);
 		ow(data, ow.optional.object);
 
-		return call(replaceParams(url, __(this).get('user')), {
+		return call(replaceParameters(url, __(this).get('user')), {
 			token:  __(this).get('token'),
 			method: 'DELETE',
-			data:   data
+			data
 		});
 	}
 
 }
 
 
-module.exports = BitbucketAPI;
+export default AbsolunetBitbucketAPI;
