@@ -1,10 +1,10 @@
 //--------------------------------------------------------
 //-- AbsolunetBitbucketAPI
 //--------------------------------------------------------
-import axios        from 'axios';
-import ow           from 'ow';
-import simpleOAuth2 from 'simple-oauth2';
-import __           from '@absolunet/private-registry';
+import axios                     from 'axios';
+import { ClientCredentials }     from 'simple-oauth2';
+import { Joi, validateArgument } from '@absolunet/joi';
+import __                        from '@absolunet/private-registry';
 
 
 
@@ -90,24 +90,28 @@ class AbsolunetBitbucketAPI {
 	 * @async
 	 * @param {string} consumerKey - The OAuth2 consumer key.
 	 * @param {string} consumerSecret - The OAuth2 consumer secret.
+	 * @throws {Error} If access token can't be fetched.
+	 * @throws {Error} If user info can't be fetched.
 	 * @returns {AuthenticationResponse} Response.
 	 */
 	async authenticate(consumerKey, consumerSecret) {
-		ow(consumerKey,    ow.string.nonEmpty.alphanumeric.length(18));
-		ow(consumerSecret, ow.string.nonEmpty.alphanumeric.length(32));
+		validateArgument('consumerKey',    consumerKey,    Joi.string().required().empty().alphanum().length(18));
+		validateArgument('consumerSecret', consumerSecret, Joi.string().required().empty().alphanum().length(32));
 
 		try {
-			const oauth2 = simpleOAuth2.create({
-				client: { id: consumerKey, secret: consumerSecret },
+			const client = new ClientCredentials({
+				client: {
+					id:     consumerKey,
+					secret: consumerSecret
+				},
 				auth: {
-					tokenHost: 'https://bitbucket.org/site/oauth2',
-					tokenPath: '/access_token'
+					tokenHost: 'https://bitbucket.org/site/',
+					tokenPath: 'oauth2/access_token'
 				}
 			});
 
 			// Fetch access token
-			const result      = await oauth2.clientCredentials.getToken();
-			const accessToken = oauth2.accessToken.create(result);
+			const accessToken = await client.getToken();
 			if (accessToken.token.access_token) {
 				__(this).set('token', accessToken.token.access_token);
 			}  else {
@@ -146,8 +150,8 @@ class AbsolunetBitbucketAPI {
 	 * @returns {CallResponse} Response.
 	 */
 	put(url, data) {
-		ow(url,  ow.string.nonEmpty);
-		ow(data, ow.optional.object);
+		validateArgument('url',  url,  Joi.string().required().empty());
+		validateArgument('data', data, Joi.object());
 
 		return call(replaceParameters(url, __(this).get('user')), {
 			token:  __(this).get('token'),
@@ -166,8 +170,8 @@ class AbsolunetBitbucketAPI {
 	 * @returns {CallResponse} Response.
 	 */
 	post(url, data) {
-		ow(url,  ow.string.nonEmpty);
-		ow(data, ow.optional.object);
+		validateArgument('url',  url,  Joi.string().required().empty());
+		validateArgument('data', data, Joi.object());
 
 		return call(replaceParameters(url, __(this).get('user')), {
 			token:  __(this).get('token'),
@@ -186,8 +190,8 @@ class AbsolunetBitbucketAPI {
 	 * @returns {CallResponse} Response.
 	 */
 	get(url, data) {
-		ow(url,  ow.string.nonEmpty);
-		ow(data, ow.optional.object);
+		validateArgument('url',  url,  Joi.string().required().empty());
+		validateArgument('data', data, Joi.object());
 
 		return call(replaceParameters(url, __(this).get('user')), {
 			token:  __(this).get('token'),
@@ -206,8 +210,8 @@ class AbsolunetBitbucketAPI {
 	 * @returns {CallResponse} Response.
 	 */
 	delete(url, data) {
-		ow(url,  ow.string.nonEmpty);
-		ow(data, ow.optional.object);
+		validateArgument('url',  url,  Joi.string().required().empty());
+		validateArgument('data', data, Joi.object());
 
 		return call(replaceParameters(url, __(this).get('user')), {
 			token:  __(this).get('token'),

@@ -16,7 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Export named properties
 - Expose axios response object
+- Change argument validation from `ow` to `joi`
 - Maintenance updates
+
 
 
 ## [1.2.0] - 2020-06-16
