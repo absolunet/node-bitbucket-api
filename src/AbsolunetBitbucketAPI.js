@@ -1,10 +1,11 @@
 //--------------------------------------------------------
 //-- AbsolunetBitbucketAPI
 //--------------------------------------------------------
-import axios                     from 'axios';
-import { ClientCredentials }     from 'simple-oauth2';
-import { Joi, validateArgument } from '@absolunet/joi';
-import __                        from '@absolunet/private-registry';
+import axios                             from 'axios';
+import { ClientCredentials }             from 'simple-oauth2';
+import { Joi, validateArgument }         from '@absolunet/joi';
+import __                                from '@absolunet/private-registry';
+import AbsolunetBitbucketAPIRepositories from './AbsolunetBitbucketAPIRepositories';
 
 
 
@@ -32,7 +33,7 @@ const call = async (url, options = {}) => {
 	const response = await axiosBitbucket(parameters);
 
 	return {
-		...response,
+		response,
 		success: response.status === 200
 	};
 };
@@ -63,6 +64,24 @@ const replaceParameters = (url, user) => {
  * Bitbucket API.
  */
 class AbsolunetBitbucketAPI {
+
+	/**
+	 * Create a Bitbucket API instance.
+	 */
+	constructor() {
+		__(this).set('repositories', new AbsolunetBitbucketAPIRepositories(this));
+	}
+
+
+	/**
+	 * Get repositories methods.
+	 *
+	 * @type {AbsolunetBitbucketAPIRepositories}
+	 */
+	get repositories() {
+		return __(this).get('repositories');
+	}
+
 
 	/**
 	 * The {@link https://axios-http.com/docs/instance/ axios instance}.
@@ -119,7 +138,7 @@ class AbsolunetBitbucketAPI {
 			}
 
 			// Fetch user data
-			const { success, data } = await this.get(`/user`);
+			const { success, response: { data } } = await this.get('/user');
 			if (success) {
 				__(this).set('user', data);
 			} else {
@@ -139,6 +158,16 @@ class AbsolunetBitbucketAPI {
 	}
 
 
+	/**
+	 * Is currently authenticated.
+	 *
+	 * @type {object}
+	 */
+	get authenticated() {
+		return __(this).get('token');
+	}
+
+
 
 	//-- Raw API methods
 	/**
@@ -147,11 +176,16 @@ class AbsolunetBitbucketAPI {
 	 * @async
 	 * @param {string} url - Url to call.
 	 * @param {object} data - Data to send.
+	 * @throws {Error} If not authenticated.
 	 * @returns {CallResponse} Response.
 	 */
 	put(url, data) {
 		validateArgument('url',  url,  Joi.string().required().empty());
 		validateArgument('data', data, Joi.object());
+
+		if (!this.authenticated) {
+			throw new Error('Not authenticated');
+		}
 
 		return call(replaceParameters(url, __(this).get('user')), {
 			token:  __(this).get('token'),
@@ -167,11 +201,16 @@ class AbsolunetBitbucketAPI {
 	 * @async
 	 * @param {string} url - Url to call.
 	 * @param {object} data - Data to send.
+	 * @throws {Error} If not authenticated.
 	 * @returns {CallResponse} Response.
 	 */
 	post(url, data) {
 		validateArgument('url',  url,  Joi.string().required().empty());
 		validateArgument('data', data, Joi.object());
+
+		if (!this.authenticated) {
+			throw new Error('Not authenticated');
+		}
 
 		return call(replaceParameters(url, __(this).get('user')), {
 			token:  __(this).get('token'),
@@ -187,11 +226,16 @@ class AbsolunetBitbucketAPI {
 	 * @async
 	 * @param {string} url - Url to call.
 	 * @param {object} data - Data to send.
+	 * @throws {Error} If not authenticated.
 	 * @returns {CallResponse} Response.
 	 */
 	get(url, data) {
 		validateArgument('url',  url,  Joi.string().required().empty());
 		validateArgument('data', data, Joi.object());
+
+		if (!this.authenticated) {
+			throw new Error('Not authenticated');
+		}
 
 		return call(replaceParameters(url, __(this).get('user')), {
 			token:  __(this).get('token'),
@@ -207,11 +251,16 @@ class AbsolunetBitbucketAPI {
 	 * @async
 	 * @param {string} url - Url to call.
 	 * @param {object} data - Data to send.
+	 * @throws {Error} If not authenticated.
 	 * @returns {CallResponse} Response.
 	 */
 	delete(url, data) {
 		validateArgument('url',  url,  Joi.string().required().empty());
 		validateArgument('data', data, Joi.object());
+
+		if (!this.authenticated) {
+			throw new Error('Not authenticated');
+		}
 
 		return call(replaceParameters(url, __(this).get('user')), {
 			token:  __(this).get('token'),

@@ -30,11 +30,14 @@ const bitbucket      = new BitbucketAPI();
 const authentication = await bitbucket.authenticate(CONSUMER_KEY, CONSUMER_SECRET);
 
 if (authentication.success) {
-	const { success, data } = bitbucket.get('/repositories/{uuid}/my-project');
+	const { success, data } = await bitbucket.get('/repositories/{uuid}/my-project/commits');
 
 	if (success) {
 		console.log(data);
 	}
+
+	const { ssh } = await bitbucket.repositories.getUserRepository('my-project');
+	console.log(`The ssh url to my project is: ${ssh}`);
 }
 ```
 
