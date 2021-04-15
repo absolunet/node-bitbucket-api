@@ -54,10 +54,22 @@ given.validConsumer = () => {
 
 
 //-- When
-when.newInstance = () => {
+when.newInstance = (options) => {
 	when.attempting(() => {
-		instance = new BitbucketAPI(consumerKey, consumerSecret);
+		instance = new BitbucketAPI(options);
 	});
+};
+
+when.newInstanceWithNoConsumerKey = () => {
+	return when.newInstance({ consumerSecret });
+};
+
+when.newInstanceWithNoConsumerSecret = () => {
+	return when.newInstance({ consumerKey });
+};
+
+when.newInstanceWithFullOptions = () => {
+	return when.newInstance({ consumerKey, consumerSecret });
 };
 
 

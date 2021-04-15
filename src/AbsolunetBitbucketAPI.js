@@ -11,17 +11,13 @@ import AbsolunetBitbucketAPIRepositories from './AbsolunetBitbucketAPIRepositori
 
 // URL parameters replacement
 const replaceParameters = (url, user = {}) => {
-	let finalUrl = url;
-
 	const replacements = {
 		'{uuid}': user.uuid
 	};
 
-	Object.keys(replacements).forEach((id) => {
-		finalUrl = finalUrl.replaceAll(id, replacements[id]);
-	});
-
-	return finalUrl;
+	return Object.entries(replacements).reduce((finalUrl, [key, value]) => {
+		return finalUrl.replaceAll(key, value);
+	}, url);
 };
 
 
@@ -37,31 +33,39 @@ class AbsolunetBitbucketAPI {
 	/**
 	 * Create a Bitbucket API instance.
 	 *
-	 * @param {string} consumerKey - The OAuth2 consumer key.
-	 * @param {string} consumerSecret - The OAuth2 consumer secret.
+	 * @param {object} options - Options.
+	 * @param {string} options.consumerKey - The OAuth2 consumer key.
+	 * @param {string} options.consumerSecret - The OAuth2 consumer secret.
 	 */
-	constructor(consumerKey, consumerSecret) {
-		validateArgument('consumerKey',    consumerKey,    Joi.string().required().empty().alphanum().length(18));
-		validateArgument('consumerSecret', consumerSecret, Joi.string().required().empty().alphanum().length(32));
+	constructor(options) {
+		validateArgument('options', options, Joi.object({
+			consumerKey:    Joi.string().required().empty().alphanum().length(18),
+			consumerSecret: Joi.string().required().empty().alphanum().length(32)
+		}).required());
 
-		// Consumer credentials
-		__(this).set('consumerKey',    consumerKey);
-		__(this).set('consumerSecret', consumerSecret);
+		//-- Set client credentials
+		const clientCredentials = new ClientCredentials({
+			client: {
+				id:     options.consumerKey,
+				secret: options.consumerSecret
+			},
+			auth: {
+				tokenHost: 'https://bitbucket.org/site/',
+				tokenPath: 'oauth2/access_token'
+			}
+		});
+
+		__(this).set('clientCredentials', clientCredentials);
 
 
-		// Set axios
+		//-- Set axios
 		const bitbucketAxios = axios.create({
-			baseURL:        'https://api.bitbucket.org/2.0',
-			responseType:   'json',
-			validateStatus: () => { return true; }
+			baseURL:      'https://api.bitbucket.org/2.0',
+			responseType: 'json'
 		});
 
 		bitbucketAxios.interceptors.request.use(async (config) => {
-
-			// Ensure authentication
-			if (!this.authenticated) {
-				await this.authenticate();
-			}
+			await this.ensureAuthenticated();
 
 			// Add OAuth2 token
 			if (__(this).get('token')) {
@@ -77,7 +81,7 @@ class AbsolunetBitbucketAPI {
 		__(this).set('axios', bitbucketAxios);
 
 
-		// Submodule
+		//-- Submodule
 		__(this).set('repositories', new AbsolunetBitbucketAPIRepositories(this));
 	}
 
@@ -130,21 +134,10 @@ class AbsolunetBitbucketAPI {
 	 * @returns {object} User.
 	 */
 	async authenticate() {
-		const client = new ClientCredentials({
-			client: {
-				id:     __(this).get('consumerKey'),
-				secret: __(this).get('consumerSecret')
-			},
-			auth: {
-				tokenHost: 'https://bitbucket.org/site/',
-				tokenPath: 'oauth2/access_token'
-			}
-		});
-
 
 		// Fetch access token
 		try {
-			const accessToken = await client.getToken();
+			const accessToken = await __(this).get('clientCredentials').getToken();
 			if (!accessToken.token.access_token) {
 				throw new Error('No token received');
 			}
@@ -162,6 +155,16 @@ class AbsolunetBitbucketAPI {
 
 
 		return this.user;
+	}
+
+
+	/**
+	 * Ensure authenticated.
+	 *
+	 * @returns {Promise} When authenticated.
+	 */
+	ensureAuthenticated() {
+		return !this.authenticated ? this.authenticate() : undefined;
 	}
 
 

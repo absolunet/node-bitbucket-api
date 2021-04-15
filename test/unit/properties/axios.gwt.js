@@ -13,7 +13,7 @@ let actualAxios;
 let actualPrivateRegistry;
 let propertyName;
 let propertyValue;
-let bitbucketAPIAuthenticate;
+let bitbucketAPIEnsureAuthenticated;
 let axiosConfig;
 
 
@@ -29,7 +29,7 @@ given.noProperty = () => {
 };
 
 given.noSpies = () => {
-	bitbucketAPIAuthenticate = undefined;
+	bitbucketAPIEnsureAuthenticated = undefined;
 };
 
 given.noAxiosConfig = () => {
@@ -54,8 +54,8 @@ given.property = (name) => {
 	propertyName = name;
 };
 
-given.bitbucketAPIAuthenticateSpy = () => {
-	bitbucketAPIAuthenticate = jest.spyOn(bitbucketAPI, 'authenticate').mockImplementationOnce(() => { /**/ });
+given.bitbucketAPIEnsureAuthenticatedSpy = () => {
+	bitbucketAPIEnsureAuthenticated = jest.spyOn(bitbucketAPI, 'ensureAuthenticated').mockImplementationOnce(async () => { /**/ });
 };
 
 given.tokenFetched = () => {
@@ -101,11 +101,10 @@ then.propertyValueShouldBeAxiosInstance = () => {
 then.defaultOptionsShouldBeValid = () => {
 	expect(bitbucketAPI.axios.defaults.baseURL).toBe('https://api.bitbucket.org/2.0');
 	expect(bitbucketAPI.axios.defaults.responseType).toBe('json');
-	expect(bitbucketAPI.axios.defaults.validateStatus()).toBe(true);
 };
 
-then.authenticateShouldHaveBeenCalled = () => {
-	expect(bitbucketAPIAuthenticate).toHaveBeenCalled();
+then.ensureAuthenticatedShouldHaveBeenCalled = () => {
+	expect(bitbucketAPIEnsureAuthenticated).toHaveBeenCalled();
 };
 
 then.headersShouldContainToken = () => {

@@ -23,10 +23,10 @@ $ npm install @absolunet/bitbucket-api
 ```js
 import { BitbucketAPI } from '@absolunet/bitbucket-api';
 
-const CONSUMER_KEY    = 'zyxwvutsrqponmlkji';
-const CONSUMER_SECRET = 'abcdefghijklmnopqrstuvwxyz012345';
-
-const bitbucket = new BitbucketAPI(CONSUMER_KEY, CONSUMER_SECRET);
+const bitbucket = new BitbucketAPI({
+	consumerKey:    'zyxwvutsrqponmlkji',
+	consumerSecret: 'abcdefghijklmnopqrstuvwxyz012345'
+});
 
 const { data } = await bitbucket.get('/repositories/{uuid}/my-project/commits');
 console.log(data);

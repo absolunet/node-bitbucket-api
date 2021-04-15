@@ -36,10 +36,10 @@ describe(`Validate that axios works`, () => {
 
 
 	//-- Interceptor works
-	test(`Ensure if not authenticated it authenticates`, async () => {
-		given.bitbucketAPIAuthenticateSpy();
+	test(`Ensure it is authenticated`, async () => {
+		given.bitbucketAPIEnsureAuthenticatedSpy();
 		await when.axiosUsed();
-		then.authenticateShouldHaveBeenCalled();
+		then.ensureAuthenticatedShouldHaveBeenCalled();
 	});
 
 	test(`Ensure token is in headers`, async () => {

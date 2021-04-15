@@ -12,7 +12,10 @@ const then  = { ...gwt.then };
 given.importedBitbucketAPIInstance = () => {
 	const { BitbucketAPI } = given.importedBitbucketAPI();
 
-	return new BitbucketAPI('zyxwvutsrqponmlkji', 'abcdefghijklmnopqrstuvwxyz012345');
+	return new BitbucketAPI({
+		consumerKey:    'zyxwvutsrqponmlkji',
+		consumerSecret: 'abcdefghijklmnopqrstuvwxyz012345'
+	});
 };
 
 
