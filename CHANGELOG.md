@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.repositories.getUserRepository()`
 - `.repositories.createUserRepository()`
 - Automatic authentication on calls if not authenticated
+- Add tests
 - API documentation
 
 ### Changed
