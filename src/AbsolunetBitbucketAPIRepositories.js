@@ -6,11 +6,11 @@ import __                        from '@absolunet/private-registry';
 
 
 
-const addRepositoryUrls = (data) => {
+const addRepositoryUrls = (response) => {
 	return {
-		data,
-		https: `https://bitbucket.org/${data.full_name}`,
-		ssh:   `ssh://git@bitbucket.org/${data.full_name}.git`
+		response,
+		https: `https://bitbucket.org/${response.data.full_name}`,
+		ssh:   `ssh://git@bitbucket.org/${response.data.full_name}.git`
 	};
 };
 
@@ -51,23 +51,12 @@ class AbsolunetBitbucketAPIRepositories {
 	 *
 	 * @async
 	 * @param {string} repository - Repository name.
-	 * @throws {Error} If call fails.
-	 * @returns {Repository|null} Repository data.
+	 * @returns {Repository} Repository data.
 	 */
 	async getUserRepository(repository) {
 		validateArgument('repository', repository, Joi.string().required().empty());
 
-		const { success, response: { data } } = await this.bitbucketAPI.get(`/repositories/{uuid}/${repository}`);
-
-		if (!success) {
-			if (data.error.message.endsWith(`${repository} not found`)) {
-				return null;
-			}
-
-			throw new Error(data.error.message);
-		}
-
-		return addRepositoryUrls(data);
+		return addRepositoryUrls(await this.bitbucketAPI.get(`/repositories/{uuid}/${repository}`));
 	}
 
 
@@ -76,25 +65,18 @@ class AbsolunetBitbucketAPIRepositories {
 	 *
 	 * @async
 	 * @param {string} repository - Repository name.
-	 * @throws {Error} If call fails.
 	 * @returns {Repository} Repository data.
 	 */
-	async createUserRepository(repository) {
+	async createUserPrivateRepository(repository) {
 		validateArgument('repository', repository, Joi.string().required().empty());
 
-		const { success, response: { data } } = await this.bitbucketAPI.post(
+		return addRepositoryUrls(await this.bitbucketAPI.post(
 			`/repositories/{uuid}/${repository}`,
 			{
 				scm: 'git',
 				is_private: true  // eslint-disable-line camelcase
 			}
-		);
-
-		if (!success) {
-			throw new Error(data.error.message);
-		}
-
-		return addRepositoryUrls(data);
+		));
 	}
 
 }

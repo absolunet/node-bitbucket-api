@@ -26,19 +26,13 @@ import { BitbucketAPI } from '@absolunet/bitbucket-api';
 const CONSUMER_KEY    = 'zyxwvutsrqponmlkji';
 const CONSUMER_SECRET = 'abcdefghijklmnopqrstuvwxyz012345';
 
-const bitbucket      = new BitbucketAPI();
-const authentication = await bitbucket.authenticate(CONSUMER_KEY, CONSUMER_SECRET);
+const bitbucket = new BitbucketAPI(CONSUMER_KEY, CONSUMER_SECRET);
 
-if (authentication.success) {
-	const { success, data } = await bitbucket.get('/repositories/{uuid}/my-project/commits');
+const { data } = await bitbucket.get('/repositories/{uuid}/my-project/commits');
+console.log(data);
 
-	if (success) {
-		console.log(data);
-	}
-
-	const { ssh } = await bitbucket.repositories.getUserRepository('my-project');
-	console.log(`The ssh url to my project is: ${ssh}`);
-}
+const { ssh } = await bitbucket.repositories.getUserRepository('my-project');
+console.log(`The ssh url to my project is: ${ssh}`);
 ```
 
 

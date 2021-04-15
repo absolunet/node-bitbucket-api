@@ -14,12 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.authenticated`
 - `.repositories.getUserRepository()`
 - `.repositories.createUserRepository()`
-- Throws error on calls if not authenticated
+- Automatic authentication on calls if not authenticated
 - API documentation
 
 ### Changed
 - Export named properties
-- Expose axios response object
+- Calls return axios response object
 - Change argument validation from `ow` to `joi`
 - Maintenance updates
 
