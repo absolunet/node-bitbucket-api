@@ -10,6 +10,7 @@ const then  = { ...gwt.then };
 
 let bitbucketAPI;
 let actualAxios;
+let axiosMockAdapter;
 let actualPrivateRegistry;
 let propertyName;
 let propertyValue;
@@ -46,6 +47,11 @@ given.actualAxios = () => {
 	actualAxios = jest.requireActual('axios');
 };
 
+given.axiosMockAdapter = () => {
+	const MockAdapter = jest.requireActual('axios-mock-adapter');
+	axiosMockAdapter = new MockAdapter(bitbucketAPI.axios);
+};
+
 given.privateRegistry = () => {
 	actualPrivateRegistry = jest.requireActual('@absolunet/private-registry');
 };
@@ -68,14 +74,12 @@ given.userFetched = () => {
 	actualPrivateRegistry(bitbucketAPI).set('user', { uuid: '123e4567-e89b-12d3-a456-426614174000' });
 };
 
-given.axiosRequestInterceptor = () => {
-	bitbucketAPI.axios.interceptors.request.use((config) => {
+given.axiosMock = () => {
+	axiosMockAdapter.onGet().reply((config) => {
 		axiosConfig = config;
-		throw new Error('Block actual call');
-	});
 
-	// Force this interceptor to be the last executed
-	bitbucketAPI.axios.interceptors.request.handlers.push(bitbucketAPI.axios.interceptors.request.handlers.shift());
+		return [200, {}];
+	});
 };
 
 

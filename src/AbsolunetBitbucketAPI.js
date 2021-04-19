@@ -16,7 +16,7 @@ const replaceParameters = (url, user = {}) => {
 	};
 
 	return Object.entries(replacements).reduce((finalUrl, [key, value]) => {
-		return finalUrl.replaceAll(key, value);
+		return finalUrl.replace(key, value);
 	}, url);
 };
 

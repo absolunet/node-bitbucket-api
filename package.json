@@ -45,7 +45,8 @@
   },
   "devDependencies": {
     "@absolunet/manager": "2.1.0",
-    "@absolunet/tester": "4.2.0"
+    "@absolunet/tester": "4.2.0",
+    "axios-mock-adapter": "1.19.0"
   },
   "dependencies": {
     "@absolunet/joi": "^0.3.0",

@@ -13,6 +13,7 @@ describe(`Validate that axios works`, () => {
 		given.noSpies();
 		given.noAxiosConfig();
 		given.bitbucketAPIInstance();
+		given.axiosMockAdapter();
 	});
 
 	afterEach(() => {
@@ -43,14 +44,14 @@ describe(`Validate that axios works`, () => {
 	});
 
 	test(`Ensure token is in headers`, async () => {
-		given.axiosRequestInterceptor();
+		given.axiosMock();
 		given.tokenFetched();
 		await when.axiosUsed();
 		then.headersShouldContainToken();
 	});
 
 	test(`Ensure data is replaced in url`, async () => {
-		given.axiosRequestInterceptor();
+		given.axiosMock();
 		given.tokenFetched();
 		given.userFetched();
 		await when.axiosUsed();
