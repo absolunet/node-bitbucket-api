@@ -23,19 +23,16 @@ $ npm install @absolunet/bitbucket-api
 ```js
 import { BitbucketAPI } from '@absolunet/bitbucket-api';
 
-const CONSUMER_KEY    = 'zyxwvutsrqponmlkji';
-const CONSUMER_SECRET = 'abcdefghijklmnopqrstuvwxyz012345';
+const bitbucket = new BitbucketAPI({
+	consumerKey:    'zyxwvutsrqponmlkji',
+	consumerSecret: 'abcdefghijklmnopqrstuvwxyz012345'
+});
 
-const bitbucket      = new BitbucketAPI();
-const authentication = await bitbucket.authenticate(CONSUMER_KEY, CONSUMER_SECRET);
+const { data } = await bitbucket.get('/repositories/{uuid}/my-project/commits');
+console.log(data);
 
-if (authentication.success) {
-	const { success, data } = bitbucket.get('/repositories/{uuid}/my-project');
-
-	if (success) {
-		console.log(data);
-	}
-}
+const { ssh } = await bitbucket.repositories.getUserRepository('my-project');
+console.log(`The ssh url to my project is: ${ssh}`);
 ```
 
 
